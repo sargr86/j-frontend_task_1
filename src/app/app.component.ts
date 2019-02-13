@@ -1,6 +1,5 @@
-import {Component} from '@angular/core';
+import {Component, HostListener} from '@angular/core';
 import {Offset} from './models/Offset';
-import {SubjectService} from './services/subject.service';
 
 @Component({
     selector: 'app-root',
@@ -9,15 +8,20 @@ import {SubjectService} from './services/subject.service';
 })
 export class AppComponent {
 
+    // Rectangle current sizes and position
+    height = 170;
+    width = 300;
+    oldY = 0;
+    oldX = 200;
+
+    grabber = false; // responsible for grabbing state when do resizing
+
     wrapperStyle: object;
     dragging = false;   // responsible for dragging state
     degree = 0;  // rotate degree
     offset: Offset;
 
-    constructor(
-        private subject: SubjectService
-    ) {
-
+    constructor() {
     }
 
     /**
@@ -31,7 +35,6 @@ export class AppComponent {
         };
 
         this.dragging = true;
-        this.subject.setState(this.dragging);
     }
 
     /**
@@ -39,7 +42,6 @@ export class AppComponent {
      */
     mouseUp() {
         this.dragging = false;
-        this.subject.setState(this.dragging);
     }
 
 
@@ -57,5 +59,61 @@ export class AppComponent {
             this.wrapperStyle = {'transform': 'rotateZ(' + this.degree + 'deg)', 'transform-origin': '50% 50%'};
         }
     }
+
+    /**
+     * Mouse down event marks grabbing as started
+     * @param event (mouse down event)
+     */
+    @HostListener('document:mousedown', ['$event'])
+    onMouseDown(event: MouseEvent) {
+        this.grabber = true;
+        this.oldY = event.clientY;
+        this.oldX = event.clientX;
+
+        event.preventDefault();
+    }
+
+    /**
+     * Mouse moving event here handles the rectangle resize
+     * @param event mouse move event
+     */
+    @HostListener('document:mousemove', ['$event'])
+    onMouseMove(event: MouseEvent) {
+
+        // Mouse moving possible only when dragging & grabbing is finished
+        if (!this.grabber || this.dragging) {
+            return;
+        }
+
+
+        // Resizing div by subtracting cursor positions with from its older values and updating the rectangle sizes
+        this.resizer(event.clientX - this.oldX, event.clientY - this.oldY);
+
+        // Saving current coordinates to next time refer to
+        this.oldY = event.clientY;
+        this.oldX = event.clientX;
+
+    }
+
+    /**
+     * Mouse up event stops both grabbing and dragging
+     * @param event (mouse up event)
+     */
+    @HostListener('document:mouseup', ['$event'])
+    onMouseUp(event: MouseEvent) {
+        this.grabber = false;
+        this.dragging = false;
+    }
+
+    /**
+     * Resizes the rectangle
+     * @param  offsetX current X offset
+     * @param  offsetY current Y offset
+     */
+    resizer(offsetX: number, offsetY: number) {
+        this.height += offsetY;
+        this.width += offsetX;
+    }
+
 
 }

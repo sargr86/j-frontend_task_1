@@ -1,5 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
-import {SubjectService} from '../../services/subject.service';
+import {Component, OnInit} from '@angular/core';
 
 @Component({
     selector: 'app-rectangle',
@@ -8,18 +7,11 @@ import {SubjectService} from '../../services/subject.service';
 })
 export class RectangleComponent implements OnInit {
 
-    @Input() dragging;
-
-    constructor(
-        private subject: SubjectService
-    ) {
+    constructor() {
     }
 
     ngOnInit() {
-        this.subject.getState().subscribe(dragging => {
-            this.dragging = dragging;
-        });
-
     }
+
 
 }
