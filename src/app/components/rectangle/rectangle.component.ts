@@ -17,7 +17,7 @@ export class RectangleComponent implements OnInit {
 
     ngOnInit() {
         this.subject.getState().subscribe(dragging => {
-           this.dragging = dragging;
+            this.dragging = dragging;
         });
 
     }
