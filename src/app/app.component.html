@@ -1,6 +1,6 @@
 <div class="container">
-    <div class="wrapper">
-        <button class="dot"></button>
-        <app-rectangle></app-rectangle>
+    <div class="wrapper" [ngStyle]="wrapperStyle" (mouseup)="mouseUp()" (mousemove)="mouseMove($event)">
+        <button class="dot" (mousedown)="dotMouseDown($event)" ></button>
+        <app-rectangle [dragging]="dragging"></app-rectangle>
     </div>
 </div>
