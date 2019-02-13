@@ -1,6 +1,8 @@
 <div class="container">
-    <div class="wrapper">
-        <button class="dot"></button>
-        <app-rectangle></app-rectangle>
+    <div class="wrapper" [ngStyle]="wrapperStyle" (mouseup)="mouseUp()" (mousemove)="mouseMove($event)" ngResizable>
+        <div class="rectangleContainer">
+            <button class="dot" (mousedown)="dotMouseDown($event)"></button>
+            <app-rectangle></app-rectangle>
+        </div>
     </div>
 </div>
