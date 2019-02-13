@@ -1,8 +1,10 @@
 <div class="container">
     <div class="wrapper" [ngStyle]="wrapperStyle" (mouseup)="mouseUp()" (mousemove)="mouseMove($event)"
          [style.height.px]='height' [style.width.px]="width" contenteditable="true">
-        <button class="dot" (mousedown)="dotMouseDown($event)"></button>
-        <app-rectangle></app-rectangle>
+        <div class="rectangleContainer">
+            <button class="dot" (mousedown)="dotMouseDown($event)"></button>
+            <app-rectangle></app-rectangle>
+        </div>
         <div class="grabber"></div>
     </div>
 </div>

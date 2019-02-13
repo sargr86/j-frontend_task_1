@@ -15,17 +15,24 @@
     position: relative;
     width: 300px;
     height: 170px;
+    padding: 20px;
     overflow: hidden;
-    .dot {
-      cursor: grab;
-      width: 15px;
-      height: 15px;
-      border-radius: 15px;
-      background-color: $light_blue;
-      border: none;
-      display: block;
-      margin: 20px auto;
-      outline: none;
+    .rectangleContainer {
+      width: 100%;
+      height: 100%;
+      position: relative;
+      overflow: hidden;
+      .dot {
+        cursor: grab;
+        width: 15px;
+        height: 15px;
+        border-radius: 15px;
+        background-color: $light_blue;
+        border: none;
+        display: block;
+        margin: 20px auto;
+        outline: none;
+      }
     }
     .grabber {
       position: absolute;
@@ -36,5 +43,7 @@
       height: 15px;
       background: url("../assets/images/resize_icon.png");
     }
+
   }
 }
+
