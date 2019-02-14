@@ -23,8 +23,6 @@ export class AppComponent {
     degree = 0;  // rotate degree
     offset: Offset;
 
-    timeout;
-
     constructor(
         private getPosition: GetCoordinatesPipe
     ) {
@@ -54,18 +52,14 @@ export class AppComponent {
     mouseMove(e: MouseEvent) {
 
         if (this.dragging) {
-            clearTimeout(this.timeout);
-            const self = this;
-            this.timeout = setTimeout(function () {
-                const mouse_x = e.pageX - self.offset.x;
-                const mouse_y = e.pageY - self.offset.y;
+
+            const mouse_x = e.pageX - this.offset.x;
+            const mouse_y = e.pageY - this.offset.y;
 
 
-                const radians = Math.atan2(mouse_x, mouse_y);
-                self.degree = (radians * (180 / Math.PI) * -1) + 90;
-                self.placeholderStyle = {'transform': 'rotateZ(' + self.degree + 'deg)', 'transform-origin': '50% 50%'};
-
-            }, 50);
+            const radians = Math.atan2(mouse_x, mouse_y);
+            this.degree = (radians * (180 / Math.PI) * -1) + 90;
+            this.placeholderStyle = {'transform': 'rotateZ(' + this.degree + 'deg)', 'transform-origin': '50% 50%'};
 
 
         }
