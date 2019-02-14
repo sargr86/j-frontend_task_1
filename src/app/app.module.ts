@@ -5,7 +5,6 @@ import {AppComponent} from './app.component';
 import {RectangleComponent} from './components/rectangle/rectangle.component';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {DragDropModule} from '@angular/cdk/drag-drop';
-import {GetCoordinatesPipe} from './pipes/get-coordinates.pipe';
 
 @NgModule({
     declarations: [
@@ -17,7 +16,7 @@ import {GetCoordinatesPipe} from './pipes/get-coordinates.pipe';
         BrowserAnimationsModule,
         DragDropModule
     ],
-    providers: [GetCoordinatesPipe],
+    providers: [],
     bootstrap: [AppComponent]
 })
 export class AppModule {

@@ -1,6 +1,5 @@
 import {Component, HostListener} from '@angular/core';
 import {Offset} from './models/Offset';
-import {GetCoordinatesPipe} from './pipes/get-coordinates.pipe';
 
 @Component({
     selector: 'app-root',
@@ -24,7 +23,6 @@ export class AppComponent {
     offset: Offset;
 
     constructor(
-        private getPosition: GetCoordinatesPipe
     ) {
     }
 
@@ -56,9 +54,10 @@ export class AppComponent {
             const mouse_x = e.pageX - this.offset.x;
             const mouse_y = e.pageY - this.offset.y;
 
+            const radians = Math.atan2(mouse_y, mouse_x);
 
-            this.degree = Math.atan2(mouse_y, mouse_x) * 180 / Math.PI + 45;
-            this.placeholderStyle = {'transform': 'rotateZ(' + this.degree + 'deg)', 'transform-origin': '50% 50%'};
+            this.degree = radians === 0 ? 0 : radians * 180 / Math.PI + 15;
+            this.placeholderStyle = {'transform': 'rotateZ(' + this.degree + 'deg)'};
 
 
         }
@@ -90,18 +89,7 @@ export class AppComponent {
         this.oldY = event.clientY;
         this.oldX = event.clientX;
 
-        this.countAngle(event);
-
         event.preventDefault();
-    }
-
-    countAngle(e) {
-        const mouse_x = e.pageX - this.offset.x;
-        const mouse_y = e.pageY - this.offset.y;
-
-        const radians = Math.atan2(mouse_x, mouse_y);
-        this.degree = Math.atan2(mouse_y, mouse_x) * 180 / Math.PI;
-        this.placeholderStyle = {'transform': 'rotateZ(' + this.degree + 'deg)', 'transform-origin': '50% 50%'};
     }
 
     /**
