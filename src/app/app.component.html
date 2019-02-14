@@ -1,10 +1,20 @@
-<div class="container">
-    <div class="wrapper" [ngStyle]="wrapperStyle" (mouseup)="mouseUp()" (mousemove)="mouseMove($event)"
-         [style.height.px]='height' [style.width.px]="width" contenteditable="true">
-        <div class="rectangleContainer">
-            <button class="dot" (mousedown)="dotMouseDown($event)"></button>
-            <app-rectangle></app-rectangle>
+<div class="allContainer">
+    <div class="container">
+
+
+        <div class="wrapper" [ngStyle]="wrapperStyle" (mousemove)="mouseMove($event)"
+             [style.height.px]='height' [style.width.px]="width" contenteditable="true">
+
+            <div class="rectangleContainer">
+                <button class="dot" (mousedown)="dotMouseDown($event)"></button>
+                <app-rectangle></app-rectangle>
+            </div>
+
+            <div class="grabber"></div>
         </div>
-        <div class="grabber"></div>
     </div>
+
+    <div class="placeholder" *ngIf="dragging" [ngStyle]="placeholderStyle" [style.height.px]='height'
+         [style.width.px]="width"></div>
+
 </div>

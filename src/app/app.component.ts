@@ -1,5 +1,6 @@
 import {Component, HostListener} from '@angular/core';
 import {Offset} from './models/Offset';
+import {GetCoordinatesPipe} from './pipes/get-coordinates.pipe';
 
 @Component({
     selector: 'app-root',
@@ -17,11 +18,16 @@ export class AppComponent {
     grabber = false; // responsible for grabbing state when do resizing
 
     wrapperStyle: object;
+    placeholderStyle: object;
     dragging = false;   // responsible for dragging state
     degree = 0;  // rotate degree
     offset: Offset;
 
-    constructor() {
+    timeout;
+
+    constructor(
+        private getPosition: GetCoordinatesPipe
+    ) {
     }
 
     /**
@@ -34,14 +40,10 @@ export class AppComponent {
             y: e.pageY
         };
 
-        this.dragging = true;
-    }
+        const radians = Math.atan2(this.offset.x, this.offset.y);
+        this.degree = (radians * (180 / Math.PI) * -1) + 90;
 
-    /**
-     * Acts on mouse up event, prevents further dragging of wrapper div
-     */
-    mouseUp() {
-        this.dragging = false;
+        this.dragging = true;
     }
 
 
@@ -50,14 +52,39 @@ export class AppComponent {
      * @param e event that fires on mouse move event
      */
     mouseMove(e: MouseEvent) {
-        if (this.dragging) {
-            const mouse_x = e.pageX - this.offset.x;
-            const mouse_y = e.pageY - this.offset.y;
 
-            const radians = Math.atan2(mouse_x, mouse_y);
-            this.degree = (radians * (180 / Math.PI) * -1) + 90;
-            this.wrapperStyle = {'transform': 'rotateZ(' + this.degree + 'deg)', 'transform-origin': '50% 50%'};
+        if (this.dragging) {
+            clearTimeout(this.timeout);
+            const self = this;
+            this.timeout = setTimeout(function () {
+                const mouse_x = e.pageX - self.offset.x;
+                const mouse_y = e.pageY - self.offset.y;
+
+
+                const radians = Math.atan2(mouse_x, mouse_y);
+                self.degree = (radians * (180 / Math.PI) * -1) + 90;
+                self.placeholderStyle = {'transform': 'rotateZ(' + self.degree + 'deg)', 'transform-origin': '50% 50%'};
+
+            }, 50);
+
+
         }
+
+
+        // Mouse moving possible only when dragging & grabbing is finished
+        if (!this.grabber || this.dragging) {
+            return;
+        }
+
+
+        // Resizing div by subtracting cursor positions with from its older values and updating the rectangle sizes
+        this.resizer(e.clientX - this.oldX, e.clientY - this.oldY);
+
+        // Saving current coordinates to next time refer to
+        this.oldY = e.clientY;
+        this.oldX = e.clientX;
+
+
     }
 
     /**
@@ -74,35 +101,14 @@ export class AppComponent {
     }
 
     /**
-     * Mouse moving event here handles the rectangle resize
-     * @param event mouse move event
-     */
-    @HostListener('document:mousemove', ['$event'])
-    onMouseMove(event: MouseEvent) {
-
-        // Mouse moving possible only when dragging & grabbing is finished
-        if (!this.grabber || this.dragging) {
-            return;
-        }
-
-
-        // Resizing div by subtracting cursor positions with from its older values and updating the rectangle sizes
-        this.resizer(event.clientX - this.oldX, event.clientY - this.oldY);
-
-        // Saving current coordinates to next time refer to
-        this.oldY = event.clientY;
-        this.oldX = event.clientX;
-
-    }
-
-    /**
-     * Mouse up event stops both grabbing and dragging
+     * Mouse up event stops both grabbing and dragging and applies the placeholder style
      * @param event (mouse up event)
      */
     @HostListener('document:mouseup', ['$event'])
     onMouseUp(event: MouseEvent) {
         this.grabber = false;
         this.dragging = false;
+        this.wrapperStyle = this.placeholderStyle;
     }
 
     /**
