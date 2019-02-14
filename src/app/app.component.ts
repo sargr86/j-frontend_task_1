@@ -57,7 +57,6 @@ export class AppComponent {
             const mouse_y = e.pageY - this.offset.y;
 
 
-            const radians = Math.atan2(mouse_x, mouse_y);
             this.degree = Math.atan2(mouse_y, mouse_x) * 180 / Math.PI + 45;
             this.placeholderStyle = {'transform': 'rotateZ(' + this.degree + 'deg)', 'transform-origin': '50% 50%'};
 
